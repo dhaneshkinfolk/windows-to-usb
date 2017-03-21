@@ -55,8 +55,9 @@ EOF
 umount $mnt_pnt/
 rm -r $mnt_pnt/
 
+success_message="Installation is Complete. You may boot your computer"
+success_message="$success_message with this drive inserted to install Windows"
 zenity --info --title "Installation Complete" \
-		--text "Installation is Complete. You may \
-		install Windows to computer by booting from this drive inserted"
+		--text "$success_message"
 
 
