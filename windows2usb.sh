@@ -25,14 +25,19 @@ if [ "$device" == "" ]; then
     zenity --error --text="Operation Cancelled by User"
     exit 2
 fi
-
+umount /dev/$device?*
 parted -s /dev/$device mklabel msdos
 mount -a
+
+usb_label=$(dd if="$src_image" bs=1 skip=32808 count=32)
+if [ "$usb_label" == "" ]; then
+    usb_label="Windows"
+fi
 
 #Create Partition /dev/${device}1
 parted -s /dev/$device mkpart primary 1MiB 100%
 #Format Partition /dev/${device}1
-mkntfs -Q -v -F -L "Windows" /dev/${device}1
+mkntfs -Q -v -F -L "$usb_label" /dev/${device}1
 parted -s /dev/$device set 1 boot on
 
 mnt_pnt=$(mktemp -d /tmp/usbwin.XXXXXXXXXX)
